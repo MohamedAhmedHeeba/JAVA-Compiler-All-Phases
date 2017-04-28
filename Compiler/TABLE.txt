@@ -1,17 +1,164 @@
 PARSING TABLE
-A
+ASSIGNMENT
 ====================================
-'a' : 'a'
-'b' : synch
-'c' : 'c' A 'd'
-'d' : synch
+'float' : synch
+'id' : 'id' '=' EXPRESSION ';'
+'if' : synch
+'int' : synch
+'while' : synch
+'}' : synch
+\L : synch
 ====================================
 
-S
+DECLARATION
+====================================
+'float' : PRIMITIVE_TYPE 'id' ';'
+'id' : synch
+'if' : synch
+'int' : PRIMITIVE_TYPE 'id' ';'
+'while' : synch
+'}' : synch
+\L : synch
+====================================
+
+EXPRESSION
+====================================
+'(' : SIMPLE_EXPRESSION EXPRESSION'
+')' : synch
+';' : synch
+'addop' : SIMPLE_EXPRESSION EXPRESSION'
+'id' : SIMPLE_EXPRESSION EXPRESSION'
+'num' : SIMPLE_EXPRESSION EXPRESSION'
+====================================
+
+EXPRESSION'
+====================================
+')' : EPS
+';' : EPS
+'relop' : 'relop' SIMPLE_EXPRESSION
+====================================
+
+FACTOR
+====================================
+'(' : '(' EXPRESSION ')'
+'id' : 'id'
+'mulop' : synch
+'num' : 'num'
+\L : synch
+====================================
+
+IF
+====================================
+'float' : synch
+'id' : synch
+'if' : 'if' '(' EXPRESSION ')' '{' STATEMENT '}' 'else' '{' STATEMENT '}'
+'int' : synch
+'while' : synch
+'}' : synch
+\L : synch
+====================================
+
+METHOD_BODY
+====================================
+$ : synch
+'float' : STATEMENT_LIST
+'id' : STATEMENT_LIST
+'if' : STATEMENT_LIST
+'int' : STATEMENT_LIST
+'while' : STATEMENT_LIST
+====================================
+
+PRIMITIVE_TYPE
+====================================
+'float' : 'float'
+'id' : synch
+'int' : 'int'
+====================================
+
+SIGN
+====================================
+'(' : synch
+'addop' : 'addop'
+'id' : synch
+'num' : synch
+====================================
+
+SIMPLE_EXPRESSION
+====================================
+'(' : TERM SIMPLE_EXPRESSION'
+')' : synch
+';' : synch
+'addop' : SIGN TERM SIMPLE_EXPRESSION'
+'id' : TERM SIMPLE_EXPRESSION'
+'num' : TERM SIMPLE_EXPRESSION'
+'relop' : synch
+\L : synch
+====================================
+
+SIMPLE_EXPRESSION'
+====================================
+')' : EPS
+';' : EPS
+'addop' : 'addop' TERM SIMPLE_EXPRESSION'
+'relop' : EPS
+\L : EPS
+====================================
+
+STATEMENT
+====================================
+'float' : DECLARATION
+'id' : ASSIGNMENT
+'if' : IF
+'int' : DECLARATION
+'while' : WHILE
+'}' : synch
+\L : synch
+====================================
+
+STATEMENT_LIST
+====================================
+$ : synch
+'float' : STATEMENT STATEMENT_LIST'
+'id' : STATEMENT STATEMENT_LIST'
+'if' : STATEMENT STATEMENT_LIST'
+'int' : STATEMENT STATEMENT_LIST'
+'while' : STATEMENT STATEMENT_LIST'
+====================================
+
+STATEMENT_LIST'
 ====================================
 $ : EPS
-'a' : A 'b' S
-'c' : A 'b' S
-'e' : 'e'
+'float' : STATEMENT STATEMENT_LIST'
+'id' : STATEMENT STATEMENT_LIST'
+'if' : STATEMENT STATEMENT_LIST'
+'int' : STATEMENT STATEMENT_LIST'
+'while' : STATEMENT STATEMENT_LIST'
+====================================
+
+TERM
+====================================
+'(' : FACTOR TERM'
+'addop' : synch
+'id' : FACTOR TERM'
+'num' : FACTOR TERM'
+\L : synch
+====================================
+
+TERM'
+====================================
+'addop' : EPS
+'mulop' : 'mulop' FACTOR TERM'
+\L : EPS
+====================================
+
+WHILE
+====================================
+'float' : synch
+'id' : synch
+'if' : synch
+'int' : synch
+'while' : 'while' '(' EXPRESSION ')' '{' STATEMENT '}'
+'}' : synch
+\L : synch
 ====================================
 

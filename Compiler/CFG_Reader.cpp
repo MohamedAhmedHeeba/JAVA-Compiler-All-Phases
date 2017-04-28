@@ -73,7 +73,7 @@ void CFG_Reader:: buildRule(string &line)
         if(isalpha(line[i]))
         {
             name += line[i];
-            while(i + 1 < (int)line.size() and (isalpha(line[i + 1]) or line[i + 1] == '_'))
+            while(i + 1 < (int)line.size() and (isalpha(line[i + 1]) or line[i + 1] == '_') or line[i+1] == '\'' )
                 name += line[++i];
             //cout << name << endl;
 

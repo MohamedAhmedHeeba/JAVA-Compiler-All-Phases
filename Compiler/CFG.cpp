@@ -39,10 +39,11 @@ void CFG::build_parsing_table(vector<Rule *> rules){
     ///}
 
     /// call the first and follow that fill Rules set firsts and follows
-    ///first(rules);
-    ///follow(rules);
+    cout << "UUUUUUUUUUUUUUUUUUUUU Rules Size = " << rules.size() << "\n";
+    first(rules);
+    follow(rules);
 
-
+/*
     map<string, set<string>> firstS;
     map<string, set<string>> followS;
 
@@ -146,18 +147,18 @@ void CFG::build_parsing_table(vector<Rule *> rules){
         }
         cout << endl;
     }
-
+*/
     for(auto const &ent : CFG::CFG_map){
         string name = ent.first;
         Rule * R = ent.second;
-        //cout << "AAAAAAAAAAAAAAAAAAAAAAAA   " << name <<"\n";
+        cout << "AAAAAAAAAAAAAAAAAAAAAAAA   " << name <<"\n";
 
         std::set<string>::iterator it;
         for (it = R->derived_strings.begin(); it != R->derived_strings.end(); ++it){
             string S = *it;
             set<string> first = R->getTokensFirsts()[S];
             std::set<string>::iterator itt;
-            //cout << "BBBBBBBBBBBBBBBBBBB   " << S << "\n";
+            cout << "BBBBBBBBBBBBBBBBBBB   " << S << "\n";
 
             for (itt = first.begin(); itt != first.end(); ++itt){
                 string SYM = *itt;
@@ -169,7 +170,7 @@ void CFG::build_parsing_table(vector<Rule *> rules){
                     }
                 }else if(this->trim(SYM) == "\\L"){
                     R->set_has_epson(true);
-                    //cout << "\nHHHHHHHHFFFFFFFFFFF\n" << R->get_name() << R->has_epson() << "\nHHHHHFFFFFFFFFFFFFF\n";
+                    cout << "\nHHHHHHHHFFFFFFFFFFF\n" << R->get_name() << R->has_epson() << "\nHHHHHFFFFFFFFFFFFFF\n";
                     map<string, set<string>> follows = R->getTokensFollows();
                     for(auto const &follow_ent : follows){
                         set<string> sub_follows = follow_ent.second;
@@ -177,11 +178,11 @@ void CFG::build_parsing_table(vector<Rule *> rules){
                         for (ittt = sub_follows.begin(); ittt != sub_follows.end(); ++ittt){
                             string SYM2 = *ittt;
                             if(this->parsing_table[name][SYM2].empty()){
-                                //cout << "NON " << SYM2 << "ENTRY  " << S <<"\n";
+                                cout << "NON " << SYM2 << "ENTRY  " << S <<"\n";
                                 this->parsing_table[name][SYM2] = S;
                             }else{
                                 ///ERROR NOT LL(1)
-                                //cout << "ERROR \n"<< this->parsing_table[name][SYM2] << "\n" ;
+                                cout << "ERROR 11 \n"<< this->parsing_table[name][SYM2] << "\n" ;
                             }
                         }
                     }
@@ -190,15 +191,19 @@ void CFG::build_parsing_table(vector<Rule *> rules){
             }
         }
         if(!R->has_epson()){
+            cout << "\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\n";
             map<string, set<string>> follows = R->getTokensFollows();
             for(auto const &follow_ent : follows){
+                cout << "tttttttttttttttttttttttttttttttttttttt\n" ;
                 set<string> sub_follows = follow_ent.second;
                 std::set<string>::iterator ittt;
                 for (ittt = sub_follows.begin(); ittt != sub_follows.end(); ++ittt){
                     string SYM2 = *ittt;
                     if(this->parsing_table[name][SYM2].empty()){
+                        cout << "NON " << SYM2 << "ENTRY synch " <<"\n";
                         this->parsing_table[name][SYM2] = "synch";
                     }else{
+                        cout << "ERROR 22 \n"<< this->parsing_table[name][SYM2] << "\n" ;
                         ///ERROR NOT LL(1)
                     }
                 }
@@ -245,7 +250,6 @@ string CFG::trim(const string& str){
 map<string , map<string,string> > CFG::get_parsing_table(){
     return this->parsing_table;
 }
-
 
 vector<string> CFG::split(string str, string sep) {
     char *cstr = const_cast<char *>(str.c_str());
@@ -394,6 +398,19 @@ void CFG::first(vector<Rule *> rules) {
         }
         cout << endl;
     }
+
+    for(auto rule : rules){
+        map<string, set<string>> firsts;
+
+        set<string> tokens = rule->get_derived_strings();
+        for(auto token : tokens){
+            firsts[token] = tokensFirstMap[token];
+        }
+
+        CFG_map[rule->get_name()]->setTokensFirsts(firsts);
+    }
+
+
 //    cout << "*******************************************************************" << endl;
 //    cout << "*******************************************************************" << endl;
 //    cout << "*******************************************************************" << endl;
@@ -534,6 +551,11 @@ void CFG::follow(vector<Rule *> rules) {
         totalCounter++;
     }
 
+    for(auto rule : rules){
+        map<string, set<string>> follows;
+        follows[rule->get_name()] = followMap[rule->get_name()];
+        CFG_map[rule->get_name()]->setTokensFollows(follows);
+    }
 
     cout << "Follooooooooooooow" << endl;
     for (std::map<string, set<string>>::iterator it = followMap.begin(); it != followMap.end(); ++it) {

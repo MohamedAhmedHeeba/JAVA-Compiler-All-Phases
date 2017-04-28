@@ -140,10 +140,11 @@ void Parser_Engine:: LL_Derivation(string start)
 /// print the output rule
 void Parser_Engine:: print_output()
 {
-    cout << "output Rule = \n";
+    std::ofstream out("CFG_OUTPUT.txt");
+    out << "output Rule = \n";
     for (int i = 0 ; i < output.size() ; i++)
     {
-        cout << output[i] << endl;
+        out << output[i] << endl;
     }
 }
 

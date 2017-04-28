@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1492956217 source:/home/mohamed/Desktop/Shell project/Compiler/main.cpp
+1493405694 source:/home/mohamed/Desktop/Shell project/Compiler/main.cpp
 	<iostream>
 	<bits/stdc++.h>
 	"State.h"
@@ -10,6 +10,7 @@
 	"NFA.h"
 	"Reader.h"
 	"Matcher.h"
+	"Parser_Engine.h"
 
 1491690336 /home/mohamed/Desktop/Shell project/Compiler/include/State.h
 	<string>
@@ -327,4 +328,67 @@
 	<iostream>
 	<fstream>
 	<string>
+
+1493417875 source:/home/mohamed/Desktop/Shell project/Compiler/CFG_Reader.cpp
+	"CFG_Reader.h"
+	"Rule.h"
+	"CFG.h"
+	<bits/stdc++.h>
+
+1493316496 /home/mohamed/Desktop/Shell project/Compiler/CFG_Reader.h
+	<string>
+	<vector>
+	<map>
+	<set>
+	"Rule.h"
+
+1493322048 /home/mohamed/Desktop/Shell project/Compiler/Rule.h
+	<string>
+	<vector>
+	<map>
+	<set>
+
+1493379960 /home/mohamed/Desktop/Shell project/Compiler/CFG.h
+	<string>
+	<vector>
+	<map>
+	<set>
+	"Rule.h"
+	<iostream>
+	<string>
+
+1493322775 source:/home/mohamed/Desktop/Shell project/Compiler/Left_Handling.cpp
+	"Left_Handling.h"
+	"CFG.h"
+
+1493181576 /home/mohamed/Desktop/Shell project/Compiler/Left_Handling.h
+	"bits/stdc++.h"
+	"Rule.h"
+
+1493044951 /home/mohamed/Desktop/Shell project/Compiler/Parser_Engine.h
+	<string>
+	<vector>
+	<map>
+	<set>
+	<stack>
+
+1493389065 source:/home/mohamed/Desktop/Shell project/Compiler/Parser_Engine.cpp
+	"Parser_Engine.h"
+	"CFG_Reader.h"
+	"CFG.h"
+	"Rule.h"
+	<bits/stdc++.h>
+	<string>
+	<sstream>
+	"Left_Handling.h"
+
+1493316740 source:/home/mohamed/Desktop/Shell project/Compiler/Rule.cpp
+	"Rule.h"
+
+1493417066 source:/home/mohamed/Desktop/Shell project/Compiler/CFG.cpp
+	"CFG.h"
+	<sstream>
+	<cstring>
+	<iostream>
+	<bits/stdc++.h>
 
