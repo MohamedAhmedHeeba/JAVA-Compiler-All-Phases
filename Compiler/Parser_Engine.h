@@ -25,11 +25,14 @@ class Parser_Engine
         void print_output();
         bool is_teminal(string);
         void split_and_push(string);
+        void copyStackContent();
         string trim(const string&);
 
         vector <string> tokens;
         vector <string> output;
         stack  <string> drive_stack;
+        vector <string> result;
+        vector <string> error;
 };
 
 #endif // PARSER_ENGINE_H

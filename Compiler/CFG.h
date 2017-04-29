@@ -28,6 +28,7 @@ class CFG
 
         map<string, set<string>> getFirstSet();
         map<string, set<string>> getFollowSet();
+        void validate(vector<Rule *> rules);
 
     protected:
 
@@ -65,6 +66,7 @@ class CFG
         string find(vector<string> v, string s);
 
         void print_pasring_table();
+
 
 
 };

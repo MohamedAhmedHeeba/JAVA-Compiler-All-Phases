@@ -71,13 +71,7 @@ void print_DFA(D_state* startingNode)
     stack < D_state* > current;
     current.push(startingNode);
     set < D_state* > vis;
-    //counter++;
-    //vis.insert(startingNode);
-    /*if (startingNode -> is_accept())
-    {
-        cout << "NOde << prio = " << startingNode -> get_priority() << endl;
-        cout << "NOde << Name = " << startingNode -> get_name() << endl;
-    }*/
+
     while(!current.empty())
     {
         D_state* x = current.top();
@@ -130,7 +124,7 @@ int main()
     /** HEEBA ADD THIS CODE */
 
     Reader *reader = new Reader();
-    reader->parse("Test.txt");
+    reader->parse("test_2.txt");
     vector<string> tokens =reader->get_tokens();
 
     Matcher *matcher = new Matcher();

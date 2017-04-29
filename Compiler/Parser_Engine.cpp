@@ -48,11 +48,32 @@ void Parser_Engine:: split_and_push(string top)
     }
 }
 
+void Parser_Engine:: copyStackContent()
+{
+    string s = "";
+    bool flag = false;
+    for (std::stack<string> dump = drive_stack; !dump.empty(); dump.pop())
+    {
+        if (dump.top() == "$")continue;
+        if (flag)
+        {
+            s += ' ';
+            s += dump.top();
+        }
+        else
+        {
+            s += dump.top();
+        }
+        flag = true;
+    }
+    result.push_back(s);
+}
 
 void Parser_Engine:: LL_Derivation(string start)
 {
     drive_stack.push("$");
     drive_stack.push(start);
+    copyStackContent();
     int index = 0;
 
     while (drive_stack.top() != "$" && index < tokens.size())
@@ -71,9 +92,11 @@ void Parser_Engine:: LL_Derivation(string start)
             else
             {
                 /// error
-                cout << "error111 : stack content = "  << top << "input symbo = " << tokens[index] << endl;
+                string s = "error not match :: Missing -> " + top ;
+                result.push_back(s);
             }
             drive_stack.pop();
+            copyStackContent();
         }
         else
         {
@@ -83,25 +106,31 @@ void Parser_Engine:: LL_Derivation(string start)
             if(entry.empty()) /// empty cell
             {
                 ///ERORR
-                cout << "error222 : stack content = "  << top << "input symbo = " << tokens[index] << endl;
+                string s = "error invaild symbol :: " +  tokens[index] + " -> Illegal discard it";
+                //cout << tokens[index] << "  " << top <<"\n  ";
+                result.push_back(s);
                 index++;
             }
             else if(entry == "\\L")
             {
                 drive_stack.pop();
-                this->output.push_back(top+"->"+entry);
+                result.push_back("EPS");
+                copyStackContent();
+                this->output.push_back(top+"-> EPS");
             }
             else if (entry == "synch")               ///adding synch
             {
                 ///Error
-                cout << "error333 Synch : stack content = "  << top << "input symbo = " << tokens[index] << endl;
+                string s = "error synch:: " +  top + " -> Discarded ";
+                result.push_back(s);
                 drive_stack.pop();
             }
             else
             {
                 drive_stack.pop();
-                this->output.push_back(top+"->"+entry);
+                this->output.push_back(top+"-> " + entry);
                 this->split_and_push(entry);
+                copyStackContent();
             }
         }
     }
@@ -109,7 +138,8 @@ void Parser_Engine:: LL_Derivation(string start)
     {
         while(index < tokens.size())
         {
-            cout << "empty stack Discarded = " << tokens[index++] << endl;
+            string s = "error stack empty:: " + tokens[index] + " -> Illegal discard it";
+            result.push_back(s);
         }
     }
     else if(index == tokens.size())
@@ -120,18 +150,24 @@ void Parser_Engine:: LL_Derivation(string start)
             top = trim(top);
             if (is_teminal(top))
             {
-                cout << "stack is not empty and terminal symbol 'Missing' = " << top << endl;
+                string s = "error not match ---> token empty :: Missing -> " + top ;
+                result.push_back(s);
+                drive_stack.pop();
             }
             else if (CFG::CFG_map[top]->has_epson())  ///if this rule has @
             {
                 cout << "Has EPS " << top << endl;
                 this->output.push_back(top+"-> EPS");
+                result.push_back("EPS");
+                drive_stack.pop();
+                copyStackContent();
             }
             else
             {
-                cout << "stack is not empty and non terminal symbol 'Discarded' = " << top << endl;
+                string s = "error token empty :: " + top + " -> Discarded ";
+                result.push_back(s);
+                drive_stack.pop();
             }
-            drive_stack.pop();
 
         }
     }
@@ -146,6 +182,12 @@ void Parser_Engine:: print_output()
     {
         out << output[i] << endl;
     }
+
+    std::ofstream ut("CFG_OUTPUT_PDF.txt");
+    for (int i = 0 ; i < result.size() ; i++)
+    {
+        ut << result[i] << endl;
+    }
 }
 
 
@@ -156,24 +198,6 @@ void Parser_Engine::run()
     CFG_Reader * reader = new CFG_Reader();
     reader->run();
     vector<Rule* > rules = reader->getRules();
-
-
-    /*
-    for(map <string, Rule *> :: iterator it = CFG::CFG_map.begin(); it != CFG::CFG_map.end(); ++it)
-    {
-        //cout << (it -> second) -> get_rule() << endl;
-        cout << "AAAAAAAAAAAAAAAA  " <<it -> first << endl;
-        set<string> s = (it -> second) -> get_derived_strings();
-        for (set<string>::iterator itr = s.begin(); itr != s.end(); itr++){
-            cout << "BBBBBBBBBBB   "<<*itr << "--\n";
-        }
-        cout << "--------------------------------------------------------\n\n";
-    }
-    */
-
-
-    //Left_Handling * lh = new Left_Handling();
-    //vector<Rule* > rules = lh->leftRecursion(reader->getRules());
 
     ///build the parsign table
     CFG * cfg = new CFG();

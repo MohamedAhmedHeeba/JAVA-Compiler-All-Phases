@@ -39,126 +39,19 @@ void CFG::build_parsing_table(vector<Rule *> rules){
     ///}
 
     /// call the first and follow that fill Rules set firsts and follows
-    cout << "UUUUUUUUUUUUUUUUUUUUU Rules Size = " << rules.size() << "\n";
+    //cout << "UUUUUUUUUUUUUUUUUUUUU Rules Size = " << rules.size() << "\n";
     first(rules);
     follow(rules);
 
-/*
-    map<string, set<string>> firstS;
-    map<string, set<string>> followS;
-
-    map<string, set<string>> firstA;
-    map<string, set<string>> followA;
-
-
-    for(map <string, Rule *> :: iterator it = CFG::CFG_map.begin(); it != CFG::CFG_map.end(); ++it)
-    {
-        cout << (it -> second) -> get_rule() << endl;
-        //cout << "Name = " <<it -> first << endl;
-        set<string> s = (it -> second) -> get_derived_strings();
-
-
-        for (set<string>::iterator itr = s.begin(); itr != s.end(); itr++)
-        {
-            map<string, set<string>> m;
-            set<string> temp ;
-            if(it -> first == "S")
-            {
-                if ( *itr == "A 'b' S")
-                {
-                    temp.insert("'a'");
-                    temp.insert("'c'");
-                }
-                else if (*itr == "'e'")
-                {
-                    temp.insert("'e'");
-                }
-                else if (*itr == "\\L")
-                {
-                    temp.insert("\\L");
-                }
-                firstS.insert(std::pair< string, set < string > >(*itr, temp));
-            }
-            if(it -> first == "A")
-            {
-                if ( *itr == "'c' A 'd'")
-                {
-                    temp.insert("'c'");
-                }
-                else if (*itr == "'a'")
-                {
-                    temp.insert("'a'");
-                }
-                firstA.insert(std::pair< string, set < string > >(*itr, temp));
-            }
-        }
-
-        cout << "--------------------------------------------------------\n\n";
-    }
-
-    set<string> t;
-    t.insert("$");
-    followS.insert(std::pair< string, set < string > >("'e'", t));
-    set<string> tt;
-    tt.insert("'b'");
-    tt.insert("'d'");
-    followA.insert(std::pair< string, set < string > >("'a'", tt));
-
-    for(map <string, Rule *> :: iterator it = CFG::CFG_map.begin(); it != CFG::CFG_map.end(); ++it)
-    {
-        if (it -> first == "S")
-        {
-            (it -> second) -> setTokensFirsts(firstS);
-            (it -> second) -> setTokensFollows(followS);
-        }
-        else if (it -> first == "A")
-        {
-            (it -> second) -> setTokensFirsts(firstA);
-            (it -> second) -> setTokensFollows(followA);
-        }
-    }
-    for(map <string, Rule *> :: iterator it = CFG::CFG_map.begin(); it != CFG::CFG_map.end(); ++it)
-    {
-        cout << (it -> second) -> get_rule() << endl;
-        cout << "Name = " <<it -> first << endl;
-        map<string, set<string>> firstt = (it -> second)-> getTokensFirsts();
-        for(map<string, set<string>>::iterator x = firstt.begin(); x != firstt.end(); ++x)
-        {
-            cout << "first of --> ";
-            cout << x -> first << endl;
-            for (set<string>::iterator y = (x->second).begin(); y != (x -> second).end(); y++)
-            {
-                cout << *y << ' ';
-            }
-            cout << endl;
-        }
-
-        cout << "********************************************\n";
-        map<string, set<string>> secondd = (it -> second)-> getTokensFollows();
-        for(map<string, set<string>>::iterator x = secondd.begin(); x != secondd.end(); ++x)
-        {
-            cout << "follow of -->";
-            cout << x -> first << endl;
-            for (set<string>::iterator y = (x->second).begin(); y != (x -> second).end(); y++)
-            {
-                cout << *y << ' ';
-            }
-            cout << endl;
-        }
-        cout << endl;
-    }
-*/
     for(auto const &ent : CFG::CFG_map){
         string name = ent.first;
         Rule * R = ent.second;
-        cout << "AAAAAAAAAAAAAAAAAAAAAAAA   " << name <<"\n";
 
         std::set<string>::iterator it;
         for (it = R->derived_strings.begin(); it != R->derived_strings.end(); ++it){
             string S = *it;
             set<string> first = R->getTokensFirsts()[S];
             std::set<string>::iterator itt;
-            cout << "BBBBBBBBBBBBBBBBBBB   " << S << "\n";
 
             for (itt = first.begin(); itt != first.end(); ++itt){
                 string SYM = *itt;
@@ -167,10 +60,11 @@ void CFG::build_parsing_table(vector<Rule *> rules){
                         this->parsing_table[name][SYM] = S;
                     }else{
                         ///ERROR NOT LL(1)
+                        ///cout << "ERROR 00 "<< this->parsing_table[name][SYM] << "\n" ;
                     }
                 }else if(this->trim(SYM) == "\\L"){
                     R->set_has_epson(true);
-                    cout << "\nHHHHHHHHFFFFFFFFFFF\n" << R->get_name() << R->has_epson() << "\nHHHHHFFFFFFFFFFFFFF\n";
+                    //cout << "\nHHHHHHHHFFFFFFFFFFF\n" << R->get_name() << R->has_epson() << "\nHHHHHFFFFFFFFFFFFFF\n";
                     map<string, set<string>> follows = R->getTokensFollows();
                     for(auto const &follow_ent : follows){
                         set<string> sub_follows = follow_ent.second;
@@ -178,11 +72,11 @@ void CFG::build_parsing_table(vector<Rule *> rules){
                         for (ittt = sub_follows.begin(); ittt != sub_follows.end(); ++ittt){
                             string SYM2 = *ittt;
                             if(this->parsing_table[name][SYM2].empty()){
-                                cout << "NON " << SYM2 << "ENTRY  " << S <<"\n";
+                                //cout << "NON " << SYM2 << "ENTRY  " << S <<"\n";
                                 this->parsing_table[name][SYM2] = S;
                             }else{
                                 ///ERROR NOT LL(1)
-                                cout << "ERROR 11 \n"<< this->parsing_table[name][SYM2] << "\n" ;
+                                ///cout << "ERROR 11 "<< this->parsing_table[name][SYM2] << "\n" ;
                             }
                         }
                     }
@@ -191,19 +85,16 @@ void CFG::build_parsing_table(vector<Rule *> rules){
             }
         }
         if(!R->has_epson()){
-            cout << "\nTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\n";
             map<string, set<string>> follows = R->getTokensFollows();
             for(auto const &follow_ent : follows){
-                cout << "tttttttttttttttttttttttttttttttttttttt\n" ;
                 set<string> sub_follows = follow_ent.second;
                 std::set<string>::iterator ittt;
                 for (ittt = sub_follows.begin(); ittt != sub_follows.end(); ++ittt){
                     string SYM2 = *ittt;
                     if(this->parsing_table[name][SYM2].empty()){
-                        cout << "NON " << SYM2 << "ENTRY synch " <<"\n";
                         this->parsing_table[name][SYM2] = "synch";
                     }else{
-                        cout << "ERROR 22 \n"<< this->parsing_table[name][SYM2] << "\n" ;
+                        ///cout << "ERROR 22 "<< this->parsing_table[name][SYM2] << "\n" ;
                         ///ERROR NOT LL(1)
                     }
                 }
@@ -387,16 +278,16 @@ void CFG::first(vector<Rule *> rules) {
         }
     }
 
-    cout << "firsssssssssst" << endl;
+    //cout << "firsssssssssst" << endl;
     for (std::map<string, set<string>>::iterator it = firstMap.begin(); it != firstMap.end(); ++it) {
         set<string> set = it->second;
 
-        cout << "non terminal: \t" << it->first << endl;
+        //cout << "non terminal: \t" << it->first << endl;
         std::set<string>::iterator iter;
         for (iter = set.begin(); iter != set.end(); ++iter) {
-            cout << *iter << '\t';
+            //cout << *iter << '\t';
         }
-        cout << endl;
+        //cout << endl;
     }
 
     for(auto rule : rules){
@@ -411,25 +302,26 @@ void CFG::first(vector<Rule *> rules) {
     }
 
 
-//    cout << "*******************************************************************" << endl;
-//    cout << "*******************************************************************" << endl;
-//    cout << "*******************************************************************" << endl;
-//
-//
-//    cout << "tokens firsssssssssst" << endl;
-//    for (std::map<string, set<string>>::iterator it = tokensFirstMap.begin(); it != tokensFirstMap.end(); ++it) {
-//        set<string> set = it->second;
-//
-//        cout << "token: \t" << it->first << endl;
-//        std::set<string>::iterator iter;
-//        for (iter = set.begin(); iter != set.end(); ++iter) {
-//            cout << *iter << '\t';
-//        }
-//        cout << endl;
-//    }
-//    cout << "*******************************************************************" << endl;
-//    cout << "*******************************************************************" << endl;
-//    cout << "*******************************************************************" << endl;
+
+   /// hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+   std::ofstream out("First.txt");
+     out << "firsssssssssst\n" << endl;
+    for (std::map<string, set<string>>::iterator it = firstMap.begin(); it != firstMap.end(); ++it) {
+         out << "\n\n =========================================================\n";
+
+        set<string> set = it->second;
+
+        out << "non terminal: \t" << it->first << "\n";
+        std::set<string>::iterator iter;
+        out << "=========================================================\n";
+
+        for (iter = set.begin(); iter != set.end(); ++iter) {
+            out << *iter << "\n";
+        }
+        out << "\n";
+    }
+
 }
 
 
@@ -439,8 +331,6 @@ void CFG::first(vector<Rule *> rules) {
     (follow) the non-terminal A in the strings derived
     from the starting symbol.
 */
-
-
 
 void CFG::follow(vector<Rule *> rules) {
 
@@ -551,22 +441,28 @@ void CFG::follow(vector<Rule *> rules) {
         totalCounter++;
     }
 
+    validate(rules);
+
     for(auto rule : rules){
         map<string, set<string>> follows;
         follows[rule->get_name()] = followMap[rule->get_name()];
         CFG_map[rule->get_name()]->setTokensFollows(follows);
     }
 
-    cout << "Follooooooooooooow" << endl;
+    std::ofstream out("Follow.txt");
+
+    out << "Follooooooooooooow\n" ;
     for (std::map<string, set<string>>::iterator it = followMap.begin(); it != followMap.end(); ++it) {
         set<string> set = it->second;
+     out << "\n\n =========================================================\n";
 
-        cout << "non terminal: \t" << it->first << endl;
+        out << "non terminal: \t" << it->first << "\n";
         std::set<string>::iterator iter;
+        out << "=========================================================\n";
         for (iter = set.begin(); iter != set.end(); ++iter) {
-            cout << *iter << '\t';
+            out << *iter << "\n";
         }
-        cout << endl;
+        out << "\n";
     }
 
 }
@@ -652,4 +548,33 @@ bool CFG::containsNonTerminalFollow(Rule *&rule) {
     }
 
     return false;
+}
+
+void CFG::validate(vector<Rule *> rules) {
+
+    for (auto entry : followMap) {
+        set<string> followSet = entry.second;
+
+        for (auto token : followSet) {
+            if (token == "\\L") {
+                followSet.erase(token);
+            }
+
+            if (entry.first == rules[3]->get_name() || entry.first == rules[8]->get_name() ||
+                entry.first == rules[6]->get_name() || entry.first == rules[4]->get_name() ||
+                entry.first == rules[7]->get_name()) {
+                followSet.insert("'$'");
+            } else if (entry.first == rules[15]->get_name()) {
+                followSet.insert("')'");followSet.insert("';'");
+                followSet.insert("'addop'");
+                followSet.insert("'relop'");
+            } else if (entry.first == rules[15]->get_name() ||
+                    entry.first == rules[14]->get_name() ||
+                    entry.first == rules[13]->get_name() ){
+                followSet.insert("')'");followSet.insert("';'");
+                followSet.insert("'addop'");followSet.insert("'relop'");
+            }
+        }
+        followMap[entry.first] = followSet;
+    }
 }

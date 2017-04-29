@@ -1,24 +1,24 @@
 PARSING TABLE
 ASSIGNMENT
 ====================================
+'$' : synch
 'float' : synch
-'id' : 'id' '=' EXPRESSION ';'
+'id' : 'id' 'assign' EXPRESSION ';'
 'if' : synch
 'int' : synch
 'while' : synch
 '}' : synch
-\L : synch
 ====================================
 
 DECLARATION
 ====================================
+'$' : synch
 'float' : PRIMITIVE_TYPE 'id' ';'
 'id' : synch
 'if' : synch
 'int' : PRIMITIVE_TYPE 'id' ';'
 'while' : synch
 '}' : synch
-\L : synch
 ====================================
 
 EXPRESSION
@@ -41,21 +41,24 @@ EXPRESSION'
 FACTOR
 ====================================
 '(' : '(' EXPRESSION ')'
+')' : synch
+';' : synch
+'addop' : synch
 'id' : 'id'
 'mulop' : synch
 'num' : 'num'
-\L : synch
+'relop' : synch
 ====================================
 
 IF
 ====================================
+'$' : synch
 'float' : synch
 'id' : synch
 'if' : 'if' '(' EXPRESSION ')' '{' STATEMENT '}' 'else' '{' STATEMENT '}'
 'int' : synch
 'while' : synch
 '}' : synch
-\L : synch
 ====================================
 
 METHOD_BODY
@@ -92,7 +95,6 @@ SIMPLE_EXPRESSION
 'id' : TERM SIMPLE_EXPRESSION'
 'num' : TERM SIMPLE_EXPRESSION'
 'relop' : synch
-\L : synch
 ====================================
 
 SIMPLE_EXPRESSION'
@@ -101,18 +103,17 @@ SIMPLE_EXPRESSION'
 ';' : EPS
 'addop' : 'addop' TERM SIMPLE_EXPRESSION'
 'relop' : EPS
-\L : EPS
 ====================================
 
 STATEMENT
 ====================================
+'$' : synch
 'float' : DECLARATION
 'id' : ASSIGNMENT
 'if' : IF
 'int' : DECLARATION
 'while' : WHILE
 '}' : synch
-\L : synch
 ====================================
 
 STATEMENT_LIST
@@ -138,27 +139,31 @@ $ : EPS
 TERM
 ====================================
 '(' : FACTOR TERM'
+')' : synch
+';' : synch
 'addop' : synch
 'id' : FACTOR TERM'
 'num' : FACTOR TERM'
-\L : synch
+'relop' : synch
 ====================================
 
 TERM'
 ====================================
+')' : EPS
+';' : EPS
 'addop' : EPS
 'mulop' : 'mulop' FACTOR TERM'
-\L : EPS
+'relop' : EPS
 ====================================
 
 WHILE
 ====================================
+'$' : synch
 'float' : synch
 'id' : synch
 'if' : synch
 'int' : synch
 'while' : 'while' '(' EXPRESSION ')' '{' STATEMENT '}'
 '}' : synch
-\L : synch
 ====================================
 
